@@ -9,7 +9,6 @@ const loginOrSignUp = () => {
   Axios.post('https:/localhost:5000/api/login')
 };
 
-
 function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
