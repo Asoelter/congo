@@ -1,42 +1,22 @@
 import React, {useState} from "react";
 import './App.css';
+import Nav from './Nav.js'
+import Login from './Login.js'
+import SignUp from './SignUp.js'
 import Axios from 'axios';
-import {useHistory, withRouter} from "react-router-dom";
-
-const loginOrSignUp = () => {
-  alert('button clicked')
-  console.log('[App.js: 11] fired!')
-  Axios.post('https:/localhost:5000/api/login')
-};
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 function App() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const history = useHistory();
 
   return (
+    <Router>
     <div className="App">
-      <h1>Congo</h1>
-      <h2>Login or sign up</h2>
-      <div className="form">
-        <label>Email:</label>
-        <input 
-          type="text" 
-          name="email" 
-          onChange={(e) => {setEmail(e.target.value);}}
-        ></input>
-        <label>Password:</label>
-        <input 
-          type="text" 
-          name="password"
-          onChange = {(e) => {setPassword(e.target.value);}}
-        ></input>
-        <button onClick={loginOrSignUp}>Submit</button>
-        <button onClick={history.push('items')}>Submit2</button>
-        <button>Sign Up</button>
-      </div>
-
+      <Switch>
+        <Route exact path = "/" component={Login} />
+        <Route exact path = "/signUp" component={SignUp} />
+      </Switch>
     </div>
+    </Router>
   );
 }
 
