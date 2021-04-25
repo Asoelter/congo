@@ -90,6 +90,19 @@ app.post('/add_new_product', (req, res) => {
     })
 })
 
+app.get('/product_info', (req, res) => {
+    const command = 'SELECT * FROM product;'
+    db.query(command, (err, result) => {
+        if(err)
+        {
+            console.log('requesting product info caused error: ', err)
+        }
+
+        console.log('result: ', result)
+        res.send({productInfo: result})
+    })
+})
+
 app.post("api/login", (req, res) => {
     console.log('called route')
     db.query(command, (err, result) => {

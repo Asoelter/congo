@@ -6,14 +6,14 @@ export const Admin = () => {
 
     const history = useHistory();
     const [productName, setProductName] = useState('')
-    const [quantity, setQuantity] = useState(0)
+    const [stock, setStock] = useState(0)
 
     const handleSignOut = () => {
         history.push('/')
     }
 
     const handleNewProduct = () => {
-        axios.post('http://localhost:5000/add_new_product', {productName: productName, quantity: quantity})
+        axios.post('http://localhost:5000/add_new_product', {productName: productName, stock: stock})
             .then(res => {
                 if(!res.data.success)
                 {
@@ -39,11 +39,11 @@ export const Admin = () => {
         ></input>
       </div>
       <div>
-        <label>Quantity:</label>
+        <label>Stock:</label>
         <input 
           type="text" 
           name="product" 
-          onChange = {event => setQuantity(event.target.value)}
+          onChange = {event => setStock(event.target.value)}
         ></input>
     </div>
     <div>
