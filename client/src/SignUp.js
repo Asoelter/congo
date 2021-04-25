@@ -13,7 +13,7 @@ export const SignUp = () => {
     const [address, setAddress] = useState('')
 
     const handleSignUp = () => {
-        axios.post('http://localhost:5000/signUp', {name: name, email: email, phoneNumber: phoneNumber, address: address}, {withCredentials: true})
+        axios.post('http://localhost:5000/signUp', {name: name, email: email, phoneNumber: phoneNumber, address: address})
             .then(res => {console.log('returning from sign up route without error')})
             .catch(err => {console.log('returning from signUp route with error: ', err)})
         history.push('/')
