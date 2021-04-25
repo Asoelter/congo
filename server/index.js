@@ -64,12 +64,30 @@ app.post('/is_current_user', (req, res) => {
         if(err)
         {
             console.log('sign up caused error: ', err)
-            res.send({isUser: false})
         }
 
         console.log('result after sign up: ', result)
-        res.send({isUser: true})
+        res.send({isUser: result.length != 0})
     });
+})
+
+app.post('/add_new_product', (req, res) => {
+    const productName = req.body.productName
+    const quantity = req.body.quantity
+
+    const command = "INSERT INTO product (p_name, stock) VALUES (?, ?);"
+    db.query(command, [productName, quantity], (err, result) => {
+        success = true
+
+        if(err)
+        {
+            console.log('add new product caused error: ', err)
+            success = false
+        }
+
+        console.log('result after adding a new product: ', result)
+        res.send({success: success})
+    })
 })
 
 app.post("api/login", (req, res) => {

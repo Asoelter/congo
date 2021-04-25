@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 //import './App.css';
 import axios from 'axios';
-import {Link, useHistory, withRouter} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 
 export const Login = () => {
     const [email, setEmail] = useState('')
@@ -9,19 +9,24 @@ export const Login = () => {
 
     const handleLogin = () => {
       console.log('email = ', email)
-      if(email == "admin")
+      if(email === "admin")
       {
-        //TODO(asoelter): make an admin page and send them there
-        history.push('.admin')
+        history.push('/admin')
+        return 
       }
 
       axios.post('http://localhost:5000/is_current_user', {email: email})
         .then(res => {
           const isUser = res.data.isUser
+          console.log('isUser = ', isUser)
 
           if(isUser)
           {
-            history.push('.consumer')
+            history.push('/consumer')
+          }
+          else 
+          {
+            alert('your username and password combination is not valid')
           }
         })
         .catch(err => {console.log('returning from is_current_user with error: ', err)})
@@ -43,7 +48,7 @@ export const Login = () => {
           type="text" 
           name="password"
         ></input>
-        <button onClick={handleLogin}>Sign Up</button>
+        <button onClick={handleLogin}>Sign In</button>
         <Link to="signUp">
             <li>Sign up</li>
         </Link>
