@@ -10,7 +10,7 @@ const db = mysql.createPool({
     port: 3306,
     user: 'admin',
     password: 'password',
-    database: 'congo'
+    database: 'congo-db'
 });
 
 app.use(cors())
