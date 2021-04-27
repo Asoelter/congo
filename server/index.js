@@ -106,6 +106,7 @@ app.get('/product_info', (req, res) => {
 app.post('/purchase', async (req, res) =>{
     const productName = req.body.productName
     const amountPurchased = req.body.purchaseQuantity
+    const email = req.body.email
     console.log('amount purchased: ', amountPurchased)
     const command = 'SELECT stock FROM product WHERE p_name = ?'
 
@@ -127,6 +128,51 @@ app.post('/purchase', async (req, res) =>{
                 console.log('error updating quantity. Err: ', err)
             }
         })
+    })
+
+    const createOrderQuery = 'INSERT INTO congo.orders (date_placed, email, quantity, product_name) VALUES(?, ?, ?, ?)'
+    const today = new Date()
+    db.query(createOrderQuery, [today, email, amountPurchased, productName], (err, result) => {
+        if(err)
+        {
+            console.log('failed to create new order. Err: ', err)
+        }
+
+        console.log('result after attempting to create a new order: ', result)
+    })
+    
+    res.status(200).send()
+})
+
+app.post('/user_history', (req, res) =>{
+    const email = req.body.email
+    //const query = 'Select (c_name, product_name, quantity, date_placed) from orders join consumers where orders.email = ?'
+    const query = 'Select distinct (product_name) from orders inner join consumers where orders.email = ?'
+
+    db.query(query, [email], (err, result) => {
+        if(err)
+        {
+            console.log('could not complete user_history query. Err: ', err)
+        }
+
+        console.log('result from user history query: ', result)
+
+        res.send({historyInfo: result})
+    })
+})
+
+app.post('/favorites', (req, res) => {
+    const email = req.body.email
+
+    const query = 'Select product_name from product join orders on orders.product_name = product.p_name where quantity >= all (select quantity from orders) and orders.email = ?'
+    db.query(query, [email], (err, result) => {
+        if(err)
+        {
+            console.log('could not complete favorites query. Err: ', err)
+        }
+
+        console.log('result from user favorites query: ', result)
+        res.send({productName: result})
     })
 })
 

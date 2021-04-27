@@ -2,8 +2,9 @@ import React, {useState} from "react";
 import axios from 'axios';
 import {useHistory} from "react-router-dom";
 
-export const Consumer = () => {
+export const Consumer = (props) => {
 
+    const email = props.location.state.email
     const history = useHistory();
     const [productInfo, setProductInfo] = useState();
     const [purchaseQuantity, setPurchaseQuantity] = useState(0);
@@ -12,9 +13,21 @@ export const Consumer = () => {
         console.log('product name: ', productName)
         alert('purchased: ' + productName)
 
-        axios.post('http://localhost:5000/purchase', {productName: productName, purchaseQuantity: purchaseQuantity})
+        axios.post('http://localhost:5000/purchase', {productName: productName, purchaseQuantity: purchaseQuantity, email: email})
             .then(res => {console.log('returning from purchase route with no error')})
             .catch(err => {console.log('returning from purchase route with error', err)})
+    }
+
+    const handleSignOut = () => {
+        history.push('/')
+    }
+
+    const viewHistory = () => {
+        history.push('/history', {email: email})
+    }
+
+    const viewFavorites = () => {
+        history.push('/favorites', {email: email})
     }
 
     axios.get('http://localhost:5000/product_info')
@@ -31,7 +44,7 @@ export const Consumer = () => {
                 <label>Quantity: </label>
                 <input
                     type="text" 
-                    name="email" 
+                    name="quantity" 
                     onChange={event => setPurchaseQuantity(event.target.value)}
                 >
                 </input>
@@ -43,7 +56,9 @@ export const Consumer = () => {
 
     return (
         <div className="SignUp">
-            <button style={{width: '8%', float: 'right'}} >Sign Out</button>
+            <button style={{width: '8%', float: 'right'}} onClick={handleSignOut}>Sign Out</button>
+            <button style={{width: '8%', float: 'right'}} onClick={viewHistory}>View History</button>
+            <button style={{width: '8%', float: 'right'}} onClick={viewFavorites}>View Favorites</button>
             <h1>This is the consumer page</h1>
             <div>
                 {list}

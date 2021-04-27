@@ -22,7 +22,7 @@ export const Login = () => {
 
           if(isUser)
           {
-            history.push('/consumer')
+            history.push('/consumer', {email: email})
           }
           else 
           {
