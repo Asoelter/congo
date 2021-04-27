@@ -73,10 +73,10 @@ app.post('/is_current_user', (req, res) => {
 
 app.post('/add_new_product', (req, res) => {
     const productName = req.body.productName
-    const quantity = req.body.quantity
+    const stock = req.body.stock
 
     const command = "INSERT INTO product (p_name, stock) VALUES (?, ?);"
-    db.query(command, [productName, quantity], (err, result) => {
+    db.query(command, [productName, stock], (err, result) => {
         success = true
 
         if(err)
@@ -98,16 +98,36 @@ app.get('/product_info', (req, res) => {
             console.log('requesting product info caused error: ', err)
         }
 
-        console.log('result: ', result)
+        //console.log('result: ', result)
         res.send({productInfo: result})
     })
 })
 
-app.post("api/login", (req, res) => {
-    console.log('called route')
-    db.query(command, (err, result) => {
-        console.log('adding a value!')
-    });
+app.post('/purchase', async (req, res) =>{
+    const productName = req.body.productName
+    const amountPurchased = req.body.purchaseQuantity
+    console.log('amount purchased: ', amountPurchased)
+    const command = 'SELECT stock FROM product WHERE p_name = ?'
+
+    await db.query(command, [productName], (err, currentStockResponse) => {
+        if(err)
+        {
+            console.log('purchasing product caused error: ', err)
+        }
+
+        console.log('result of querying product stock: ', currentStockResponse)
+
+        const updateCommand = 'UPDATE product SET stock = ? WHERE p_name = ?'
+        console.log('current stock: ', currentStockResponse[0].stock)
+        const newStock = currentStockResponse[0].stock - amountPurchased
+
+        db.query(updateCommand, [newStock, productName], (err, result) => {
+            if(err)
+            {
+                console.log('error updating quantity. Err: ', err)
+            }
+        })
+    })
 })
 
 app.listen(5000, ()=> {

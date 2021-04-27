@@ -6,22 +6,40 @@ export const Consumer = () => {
 
     const history = useHistory();
     const [productInfo, setProductInfo] = useState();
+    const [purchaseQuantity, setPurchaseQuantity] = useState(0);
+
+    const handlePurchase = (productName) => {
+        console.log('product name: ', productName)
+        alert('purchased: ' + productName)
+
+        axios.post('http://localhost:5000/purchase', {productName: productName, purchaseQuantity: purchaseQuantity})
+            .then(res => {console.log('returning from purchase route with no error')})
+            .catch(err => {console.log('returning from purchase route with error', err)})
+    }
 
     axios.get('http://localhost:5000/product_info')
-        .then(res => {setProductInfo(res.data)})
+        .then(res => {setProductInfo(res.data.productInfo)})
         .catch(err => {console.log('returned from product_info with error: ', err)})
 
-    console.log('productInfo: ', productInfo)
-
-    /*
     let list;
     if(productInfo != undefined)
     {
-        list = productInfo.map((v) => <li key={v.p_name}>{v.p_name}</li>)
+        list = productInfo.map((v) => 
+            <div>
+                <ul>
+                <li key={v.p_name}>{v.p_name + ': ' + v.stock}</li>
+                <label>Quantity: </label>
+                <input
+                    type="text" 
+                    name="email" 
+                    onChange={event => setPurchaseQuantity(event.target.value)}
+                >
+                </input>
+                <button onClick = {() => {handlePurchase(v.p_name)}}>Purchase</button>
+                </ul>
+            </div>
+        )
     }
-    */
-
-    let list = [1,23]
 
     return (
         <div className="SignUp">
