@@ -22,6 +22,9 @@ function App() {
         <Route exact path = "/signUp" component={SignUp} />
       </Switch>
     </div>
+    <script src="/__/firebase/8.6.1/firebase-app.js"></script>
+    <script src="/__/firebase/8.6.1/firebase-analytics.js"></script>
+    <script src="/__/firebase/init.js"></script>
     </Router>
   );
 }

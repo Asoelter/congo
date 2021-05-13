@@ -4,6 +4,7 @@ const router = express.Router()
 const mysql = require('mysql')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const { query } = require('express')
 
 const db = mysql.createPool({
     host: 'congo-db.ckbkr0exorlq.us-east-2.rds.amazonaws.com',
@@ -161,19 +162,33 @@ app.post('/user_history', (req, res) =>{
     })
 })
 
-app.post('/favorites', (req, res) => {
+app.post('/favorites', async (req, res) => {
+   const email = req.body.email
+   const nameQuery = 'SELECT DISTINCT product_name, MAX(quantity) FROM orders WHERE email = ?'
+   db.query(nameQuery, [email], (err, result) => {
+       if(err)
+       {
+           console.log('could not get product names in favorites query: ', err)
+       }
+
+       console.log('result from product name query in favorites route: ', result[0].product_name)
+       res.send({productName: result[0].product_name})
+   })
+})
+
+app.post('/user_name', async (req, res) => {
     const email = req.body.email
+    const nameQuery = 'SELECT c_name FROM consumers WHERE email = ?'
+    db.query(nameQuery, [email], (err, result) => {
+       if(err)
+       {
+           console.log('could not get user name in user_name query: ', err)
+       }
 
-    const query = 'Select product_name from product join orders on orders.product_name = product.p_name where quantity >= all (select quantity from orders) and orders.email = ?'
-    db.query(query, [email], (err, result) => {
-        if(err)
-        {
-            console.log('could not complete favorites query. Err: ', err)
-        }
-
-        console.log('result from user favorites query: ', result)
-        res.send({productName: result})
+       console.log('result from user name query: ', result[0].c_name)
+       res.send({userName: result[0].c_name})
     })
+
 })
 
 app.listen(5000, ()=> {

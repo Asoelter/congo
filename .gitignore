@@ -1,1 +1,6 @@
 client/node_modules
+firebase*
+.firebase
+.firebase/**
+.firebaserc
+public/
